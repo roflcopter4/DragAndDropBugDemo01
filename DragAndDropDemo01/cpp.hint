@@ -1,0 +1,30 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define ND [[nodiscard]]
+#define UU [[maybe_unused]]
+
+#define DELETE_COPY_ROUTINES(CLASS)           \
+    CLASS(CLASS const &)            = delete; \
+    CLASS &operator=(CLASS const &) = delete 
+
+#define DELETE_MOVE_ROUTINES(CLASS)               \
+    CLASS(CLASS &&) noexcept            = delete; \
+    CLASS &operator=(CLASS &&) noexcept = delete 
+
+#define DELETE_COPY_MOVE_ROUTINES(CLASS) \
+    DELETE_COPY_ROUTINES(CLASS);         \
+    DELETE_MOVE_ROUTINES(CLASS)
+
+#define DEFAULT_COPY_ROUTINES(CLASS)           \
+    CLASS(CLASS const &)            = default; \
+    CLASS &operator=(CLASS const &) = default 
+
+#define DEFAULT_MOVE_ROUTINES(CLASS)               \
+    CLASS(CLASS &&) noexcept            = default; \
+    CLASS &operator=(CLASS &&) noexcept = default 
+
+#define DEFAULT_COPY_MOVE_ROUTINES(CLASS) \
+    DEFAULT_COPY_ROUTINES(CLASS);         \
+    DEFAULT_MOVE_ROUTINES(CLASS)
+
