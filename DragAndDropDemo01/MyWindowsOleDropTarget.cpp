@@ -1,7 +1,7 @@
 #include "MyWindowsOleDropTarget.h"
 #include <vector>
 
-ND static std::vector<std::wstring> getFilePathsViaWin32Idlist(BYTE const *rawData);
+ND static std::vector<std::wstring> getFilePathsViaWin32IdList(BYTE const *rawData);
 
 /****************************************************************************************/
 
@@ -70,10 +70,10 @@ STDMETHODIMP MyWindowsOleDropTarget::Drop(LPDATAOBJECT pDataObj, UU DWORD grfKey
     }
     {
         auto data  = getData(CF_SHELLIDLIST, pDataObj);
-        auto files = getFilePathsViaWin32Idlist(data.data());
+        auto files = getFilePathsViaWin32IdList(data.data());
         util::DumpFmt(L"Found {} files via CF_SHELLIDLIST\n"sv, files.size());
         for (size_t i = 0; i < files.size(); ++i)
-            util::DumpFmt(L"File {:3d}: {}\n"sv, i, files[i]);
+            util::DumpFmt(L"File {:2d}: {}\n"sv, i, files[i]);
     }
     util::DumpToConsole(L"\n"sv);
     releaseDropDataObject();
@@ -142,6 +142,7 @@ bool MyWindowsOleDropTarget::canGetData(UINT cf, IDataObject *pDataObj)
     return pDataObj->QueryGetData(&formatetc) == S_OK;
 }
 
+// Copied from the Qt source.
 ND std::vector<std::wstring>
 MyWindowsOleDropTarget::convertToMime(LPDATAOBJECT pDataObj) const
 {
@@ -190,7 +191,7 @@ static void dumpComError(wchar_t const *loc, HRESULT res)
     util::DumpFmt(L"COM error in {}: {}\n"sv, loc, util::GetErrorMessage(res));
 }
 
-ND static std::vector<std::wstring> getFilePathsViaWin32Idlist(BYTE const *rawData)
+ND static std::vector<std::wstring> getFilePathsViaWin32IdList(BYTE const *rawData)
 {
 #define GetPIDLFolder(pida)  (reinterpret_cast<LPCITEMIDLIST>((reinterpret_cast<BYTE const *>(pida)) + (pida)->aoffset[0]))
 #define GetPIDLItem(pida, i) (reinterpret_cast<LPCITEMIDLIST>((reinterpret_cast<BYTE const *>(pida)) + (pida)->aoffset[(i) + 1U]))

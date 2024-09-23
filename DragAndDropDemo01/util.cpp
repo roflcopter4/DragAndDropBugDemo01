@@ -45,6 +45,13 @@ static void do_OpenConsoleWindow()
     assert(ret == 0);
     ret = _wfreopen_s(&conout, L"CONIN$", L"r", stdin);
     assert(ret == 0);
+
+    HANDLE hInput  = ::GetStdHandle(STD_INPUT_HANDLE);
+    DWORD  conmode = 0;
+    ::GetConsoleMode(hInput, &conmode);
+    conmode &= ~ENABLE_QUICK_EDIT_MODE;
+    conmode &= ~ENABLE_MOUSE_INPUT;
+    ::SetConsoleMode(hInput, conmode);
 }
 
 void OpenConsoleWindow()
